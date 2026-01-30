@@ -39,13 +39,13 @@ function build402Response(config: PaymentConfig, requestUrl: string): NextRespon
       {
         scheme: 'exact',
         network: config.network || 'base',
-        maxAmountRequired: atomicUnits,  // ← FIXED: atomic units
+        maxAmountRequired: atomicUnits,  
         resource: requestUrl,
         description: config.description,
         mimeType: 'application/json',
         payTo: PAYEE_ADDRESS,
         maxTimeoutSeconds: 60,
-        asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',  // ← FIXED: USDC contract address
+        asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',  
         extra: {
           domain: {
             name: 'USD Coin',
