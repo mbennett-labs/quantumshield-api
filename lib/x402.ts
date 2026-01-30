@@ -28,8 +28,10 @@ type RouteHandler = (request: NextRequest) => Promise<NextResponse>;
 // x402 RESPONSE BUILDER
 // ===========================================
 function build402Response(config: PaymentConfig, requestUrl: string): NextResponse {
-  // Remove $ if present in price
+  // Remove $ if present in price and convert to atomic units
   const priceValue = config.price.replace('$', '');
+  // Convert to atomic units (USDC has 6 decimals)
+  const atomicUnits = String(Math.round(parseFloat(priceValue) * 1_000_000));
   
   const x402Response = {
     x402Version: 1,
@@ -37,17 +39,19 @@ function build402Response(config: PaymentConfig, requestUrl: string): NextRespon
       {
         scheme: 'exact',
         network: config.network || 'base',
-        maxAmountRequired: priceValue,
+        maxAmountRequired: atomicUnits,  
         resource: requestUrl,
         description: config.description,
         mimeType: 'application/json',
         payTo: PAYEE_ADDRESS,
         maxTimeoutSeconds: 60,
-        asset: config.asset || 'USDC',
+        asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',  
         extra: {
-          service: 'QuantumShield Security Intelligence',
-          documentation: 'https://quantumshield-api.vercel.app/docs',
-        },
+          domain: {
+            name: 'USD Coin',
+            version: '2'
+          }
+        },  // ← FIXED: EIP-712 domain params
       },
     ],
     facilitatorUrl: FACILITATOR_URL,
@@ -57,8 +61,8 @@ function build402Response(config: PaymentConfig, requestUrl: string): NextRespon
     status: 402,
     headers: {
       'X-Payment-Required': 'true',
-      'X-Payment-Amount': priceValue,
-      'X-Payment-Asset': config.asset || 'USDC',
+      'X-Payment-Amount': atomicUnits,
+      'X-Payment-Asset': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
       'X-Payment-Network': config.network || 'base',
     },
   });

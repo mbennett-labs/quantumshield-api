@@ -92,8 +92,7 @@ function calculateWalletRisk(data: GoPlusAddressData): WalletRiskAssessment {
   else if (score >= 25) level = 'MEDIUM';
 
   // Deduplicate categories
-  const uniqueCategories = [...new Set(categories)];
-
+  const uniqueCategories = Array.from(new Set(categories));
   return {
     score: Math.min(score, 100),
     level,
