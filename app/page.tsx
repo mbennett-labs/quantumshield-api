@@ -1,18 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
 
 function Logo({ size = 32 }: { size?: number }) {
   return (
-    <div
-      className="bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-lg flex items-center justify-center"
-      style={{ width: size, height: size }}
-    >
-      <span
-        className="text-black font-bold"
-        style={{ fontSize: size * 0.4 }}
-      >
-        QS
-      </span>
-    </div>
+    <Image
+      src="/icon.png"
+      alt="QuantumShield"
+      width={size}
+      height={size}
+      className="rounded-lg"
+    />
   );
 }
 
